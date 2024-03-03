@@ -1,5 +1,4 @@
 #include <iostream>
-#include <chrono>
 #include <thread>
 #include <vector>
 #include <stdlib.h>
@@ -10,6 +9,8 @@
 #include <limits>
 #include <string>
 #include <fstream>
+#include <random>
+#include <chrono>
 /*
 Static Linking
 /MTd C Runtime Library
@@ -220,6 +221,9 @@ void prin(vector<int> num) {
 
 
 void win(vector<int> num) {
+    Sleep(200/speed);
+    system("CLS");
+    prin(num);
     cout << endl << endl << endl;
     cout << "   _    _ \n";
     cout << "  | |  | |\n";
@@ -227,7 +231,7 @@ void win(vector<int> num) {
     cout << "  | |\\/| |\n";
     cout << "  \\  /\\  /\n";
     cout << "   \\/  \\/ \n";
-    Sleep(500);
+    Sleep(500/speed);
     system("CLS");
     prin(num);
     cout << endl << endl << endl;
@@ -237,7 +241,7 @@ void win(vector<int> num) {
     cout << "  | |\\/| |  | |  \n";
     cout << "  \\  /\\  / _| |_ \n";
     cout << "   \\/  \\/  \\___/ \n";
-    Sleep(500);
+    Sleep(500/speed);
     system("CLS");
     prin(num);
     cout << endl << endl << endl;
@@ -247,7 +251,7 @@ void win(vector<int> num) {
     cout << "  | |\\/| |  | |  | . ` |\n";
     cout << "  \\  /\\  / _| |_ | |\\  |\n";
     cout << "   \\/  \\/  \\___/ \\_| \\_/\n";
-    Sleep(500);
+    Sleep(500/speed);
     system("CLS");
     prin(num);
     cout << endl << endl << endl;
@@ -258,7 +262,7 @@ void win(vector<int> num) {
     cout << "  \\  /\\  / _| |_ | |\\  || |\\  |\n";
     cout << "   \\/  \\/  \\___/ \\_| \\_/\\_| \\_/\n";
 
-    Sleep(500);
+    Sleep(500/speed);
     system("CLS");
     prin(num);
     cout << endl << endl << endl;
@@ -269,7 +273,7 @@ void win(vector<int> num) {
     cout << "  \\  /\\  / _| |_ | |\\  || |\\  || |___ \n";
     cout << "   \\/  \\/  \\___/ \\_| \\_/\\_| \\_/\\____/ \n";
     for (int i = 0; i < 4; i++) {
-        Sleep(500);
+        Sleep(300);
         system("CLS");
         prin(num);
         cout << endl << endl << endl;
@@ -279,7 +283,7 @@ void win(vector<int> num) {
         cout << "  | |\\/| |  | |  | . ` || . ` ||  __| |    / \n";
         cout << "  \\  /\\  / _| |_ | |\\  || |\\  || |___ | |\\ \\ \n";
         cout << "   \\/  \\/  \\___/ \\_| \\_/\\_| \\_/\\____/ \\_| \\_|\n";
-        Sleep(500);
+        Sleep(300);
         system("CLS");
         prin(num);
     }
@@ -401,9 +405,13 @@ void win(vector<int> num) {
 */
 int generate() {
 
-    srand(time(0));
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
-    int num = rand() % 100;
+    default_random_engine generator(seed);
+
+    uniform_int_distribution<int> distribution(0, 100);
+
+    int num = distribution(generator);
 
     if (num <= 40) {
         return 1;
@@ -428,43 +436,121 @@ int generate() {
     }
 }
 
-void rollNumbers(vector<int>& sum, int initialDelay) {
+void rollNumbers(vector<int>& sum, int delays) {
+    sum[0] = generate();
+    sum[1] = generate();
+    sum[2] = generate();
+    int sumold1 = sum[0];
+    int sumold2 = sum[1];
+    int sumold3 = sum[2];
 
-    int delays[3] = { initialDelay, initialDelay, initialDelay };
+    if (sum[0] == sum[1]) {
+        sum[1] = generate();
+    }
+    if (sum[1] == sum[2]) {
+        sum[2]== generate();
+    }
+    if (sum[0] == sum[1]) {
+        sum[1] = generate();
+    }
+    if (sum[1] == sum[2]) {
+        sum[2] == generate();
+    }
 
-    for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < 71; i++) {
 
-        sum[j] = generate();
-        int sumold = sum[j];
-
-        for (int i = 0; i < 56; i++) {
-
-            Sleep(delays[j]);
-
-            sum[j]--;
-
-            system("CLS");
-
-            prin(sum);
-
-            if (sum[j] <= 1) {
-                sum[j] = 8;
+        Sleep(delays);
+        if (i > 40) {
+            if (i >= 50) {
+                sum[0] = sumold1;
             }
-
-            if (delays[j] > 0)
-                delays[j] += initialDelay * i / speed / 20;
-            else
-                break;
+            else if (i % 2 == 0) {
+                sum[0]--;
+                if (sum[0] <= 1) {
+                    sum[0] = 7;
+                }
+            }
         }
-        sum[j] = sumold;
+        else {
+            sum[0]--;
+            if (sum[0] <= 1) {
+                sum[0] = 7;
+            }
+        }
+        Sleep(delays);
+        system("CLS");
+        prin(sum);
+        if (i > 50) {
+            if (i >= 60) {
+                sum[1] = sumold2;
+            }
+            else if (i % 2 == 0) {
+                sum[1]--;
+                if (sum[1] <= 1) {
+                    sum[1] = 7;
+                }
+            }
+        }
+        else {
+            sum[1]--;
+            if (sum[1] <= 1) {
+                sum[1] = 7;
+            }
+        }
+        Sleep(delays);
+        if (i > 60) {
+            if (i >= 70) {
+                sum[2] = sumold3;
+            }
+            else if (i % 2 == 0) {
+                sum[2]--;
+                if (sum[2] <= 1) {
+                    sum[2] = 7;
+                }
+            }
+        }
+        else {
+            sum[2]--;
+            if (sum[2] <= 1) {
+                sum[2] = 7;
+            }
+        }
+        Sleep(delays);
         system("CLS");
         prin(sum);
     }
-    Sleep(1000);
+    cout << endl;
+    if (cash <= 0) return;
+
+    if (sum[0] == sum[1] && sum[1] == sum[2]) return;
+
+    string temp4 = "Press enter to spin (10$ COST) || q to go to main menu\n";
+    cout << "Owned money ($): " << cash<<endl;
+    for (int i = 0; i < temp4.size(); i++) {
+        cout << temp4[i];
+        Sleep(10/speed);
+    }
+
+    back:
+    char input;
+    cin.get(input);
+    if (input == '\n' || input == '\0') {
+    }
+    else if (input == 'q' || input == 'Q') {
+        cin.ignore();
+        return;
+    }
+    else {
+        goto back;
+    }
+    cash -= 10;
+    times++;
+    sum = { 0, 0, 0 };
+    delays = 10/speed;
+    rollNumbers(sum, delays);
 }
 
 void mainend() {
-
     system("cls");
 
     cout << "   .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n"
@@ -483,16 +569,50 @@ void mainend() {
         cout << "YOU LOSE";
         lost++;
         system("pause");
-        return;
-
+        cout << "Resetting cash\n";
+        cash = 100;
+        Sleep(1000);
+        system("cls");
+        cout << "   .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n"
+            "  | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n"
+            "  | |    _______   | || |   _____      | || |     ____     | || |  _________   | || |    _______   | |\n"
+            "  | |   /  ___  |  | || |  |_   _|     | || |   .'    `.   | || | |  _   _  |  | || |   /  ___  |  | |\n"
+            "  | |  |  (__ \\_|  | || |    | |       | || |  /  .--.  \\  | || | |_/ | | \\_|  | || |  |  (__ \\_|  | |\n"
+            "  | |   '.___`-.   | || |    | |   _   | || |  | |    | |  | || |     | |      | || |   '.___`-.   | |\n"
+            "  | |  |`\\____) |  | || |   _| |__/ |  | || |  \\  `--'  /  | || |    _| |_     | || |  |`\\____) |  | |\n"
+            "  | |  |_______.'  | || |  |________|  | || |   `.____.'   | || |   |_____|    | || |  |_______.'  | |\n"
+            "  | |              | || |              | || |              | || |              | || |              | |\n"
+            "  | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n"
+            "   '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n";
     }
-    cout << "Owned money ($): " << cash << endl << endl;
-    cout << "Times spun: " << times << endl << endl;
-    cout << "Times lost: " << lost << endl << endl;
+    string temp1 = "Owned money ($): ";
+    string temp2 = "Times spun: ";
+    string temp3 = "Times lost: ";
 
-    cout << "Press enter to spin (10$ COST) || q to quit\n";
+    for (int i = 0; i < temp1.size(); i++) {
+        cout << temp1[i];
+        Sleep(10/speed);
+    }
+    cout << cash << endl << endl;
+    for (int i = 0; i < temp2.size(); i++) {
+        cout << temp2[i];
+        Sleep(10/speed);
+    }
+    cout << times << endl << endl;
+    for (int i = 0; i < temp3.size(); i++) {
+        cout << temp3[i];
+        Sleep(10/speed);
+    }
+    cout << lost << endl << endl;
 
-back:
+    string temp4 = "Press enter to spin (10$ COST) || q to quit\n";
+
+    for (int i = 0; i < temp4.size(); i++) {
+        cout << temp4[i];
+        Sleep(10/speed);
+    }
+
+    back:
     char input;
     cin.get(input);
     if (input == '\n' || input == '\0') {
@@ -506,7 +626,7 @@ back:
 
     vector<int> sum = { 0, 0, 0 };
 
-    int initialDelay = 10;
+    int initialDelay = 10/speed;
     times++;
     cash -= 10;
 
@@ -515,41 +635,47 @@ back:
     if (sum[0] == sum[1] && sum[1] == sum[2]) {
 
         win(sum);
+        cout << endl;
         switch (sum[0]) {
 
         case 1: cash += 200;
             cout << "Money won: " << 200;
+            Sleep(2000);
             break;
 
         case 2: cash += 400;
             cout << "Money won: " << 400;
+            Sleep(2000);
             break;
 
         case 3: cash += 800;
             cout << "Money won: " << 800;
+            Sleep(2000);
             break;
 
         case 4: cash += 2000;
             cout << "Money won: " << 2000;
+            Sleep(2000);
             break;
 
         case 5: cash += 5000;
             cout << "Money won: " << 5000;
+            Sleep(2000);
             break;
 
         case 6: cash += 10000;
             cout << "Money won: " << 10000;
+            Sleep(2000);
             break;
 
         case 7: cash += 100000;
             cout << "Money won: " << 100000;
+            Sleep(2000);
             break;
 
         default: break;
         }
     }
-    Sleep(3000);
-
     mainend();
 }
 
@@ -638,14 +764,14 @@ void load() {
     loaddata();
     for (int i = 1; i < 16; ++i) {
 
-        int wait = rand() % 1000 + 1;
+        int wait = rand() % 400 + 1;
 
         Sleep(wait);
 
         abc[i] = 254;
 
         system("cls");
-
+        cout << "Tip: For your data to save you must go back to the main menu and type q to quit safely.\n";
         cout << "Loading " << abc;
 
     }
@@ -653,6 +779,29 @@ void load() {
     cout << endl << "Complete! ";
 
     system("pause");
+
+    system("cls");
+
+    string temp1 = "Calibrating";
+    for (int i = 0; i < temp1.size(); i++) {
+        cout << temp1[i];
+        Sleep(30);
+    }
+    cout << ".";
+    Sleep(50);
+    cout << ".";
+    Sleep(50);
+    cout << ".";
+    Sleep(200);
+    system("cls");
+    cout << "Calibrating ERROR";
+    Sleep(400);
+    system("cls");
+    cout << "Calibrating ";
+    Sleep(100);
+    system("cls");
+    cout << "Calibrating OK";
+    Sleep(400);
 }
 
 
@@ -733,10 +882,14 @@ int main() {
         cout << "  ____) || |____    | |      | |    _| |_ | |\\  || |__| | ____) |\n";
         cout << " |_____/ |______|   |_|      |_|   |_____||_| \\_| \\_____||_____/ \n\n";
 
-        cout << "Define SLOTS MACHINE speed (default: 1, max: 3, min: 1): ";
+        string temp1 = "Define console SPEED (default: 1, max: 2, min: 1): ";
+        for (int i = 0; i < temp1.size(); i++) {
+            cout << temp1[i];
+            Sleep(20);
+        }
         cin >> speed;
 
-        if (speed > 3 || speed < 1) {
+        if (speed > 2 || speed < 1) {
             cout << "SPEED DECLARATION ERROR\n";
             Sleep(500);
         }
@@ -748,8 +901,6 @@ int main() {
     cin.ignore(999, '\n');
 
     mainend();
-
-
 
     return 0;
 }
