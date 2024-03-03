@@ -28,6 +28,12 @@ int speed = 0;
 
 int lost = 0;
 
+void cls() {
+    COORD pos = { 0, 0 };
+    HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleCursorPosition(output, pos);
+}
+
 void prin(vector<int> num) {
 
     cout << "   .----------------.    .----------------.    .----------------. \n"
@@ -218,10 +224,25 @@ void prin(vector<int> num) {
         << "   '----------------'    '----------------'    '----------------' ";
 
 }
+void hide() {
+    CONSOLE_CURSOR_INFO cursorInfo;
+    HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    GetConsoleCursorInfo(outputHandle, &cursorInfo);
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(outputHandle, &cursorInfo);
+}
+void show() {
+    CONSOLE_CURSOR_INFO cursorInfo;
+    HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    GetConsoleCursorInfo(outputHandle, &cursorInfo);
+    cursorInfo.bVisible = true;
+    SetConsoleCursorInfo(outputHandle, &cursorInfo);
+}
 
 
 void win(vector<int> num) {
-    Sleep(200/speed);
+    hide();
+    Sleep(200 / speed);
     system("CLS");
     prin(num);
     cout << endl << endl << endl;
@@ -231,8 +252,8 @@ void win(vector<int> num) {
     cout << "  | |\\/| |\n";
     cout << "  \\  /\\  /\n";
     cout << "   \\/  \\/ \n";
-    Sleep(500/speed);
-    system("CLS");
+    Sleep(500 / speed);
+    cls();
     prin(num);
     cout << endl << endl << endl;
     cout << "   _    _  _____ \n";
@@ -241,8 +262,8 @@ void win(vector<int> num) {
     cout << "  | |\\/| |  | |  \n";
     cout << "  \\  /\\  / _| |_ \n";
     cout << "   \\/  \\/  \\___/ \n";
-    Sleep(500/speed);
-    system("CLS");
+    Sleep(500 / speed);
+    cls();
     prin(num);
     cout << endl << endl << endl;
     cout << "   _    _  _____  _   _ \n";
@@ -251,8 +272,8 @@ void win(vector<int> num) {
     cout << "  | |\\/| |  | |  | . ` |\n";
     cout << "  \\  /\\  / _| |_ | |\\  |\n";
     cout << "   \\/  \\/  \\___/ \\_| \\_/\n";
-    Sleep(500/speed);
-    system("CLS");
+    Sleep(500 / speed);
+    cls();
     prin(num);
     cout << endl << endl << endl;
     cout << "   _    _  _____  _   _  _   _ \n";
@@ -262,8 +283,8 @@ void win(vector<int> num) {
     cout << "  \\  /\\  / _| |_ | |\\  || |\\  |\n";
     cout << "   \\/  \\/  \\___/ \\_| \\_/\\_| \\_/\n";
 
-    Sleep(500/speed);
-    system("CLS");
+    Sleep(500 / speed);
+    cls();
     prin(num);
     cout << endl << endl << endl;
     cout << "   _    _  _____  _   _  _   _  _____ \n";
@@ -274,7 +295,7 @@ void win(vector<int> num) {
     cout << "   \\/  \\/  \\___/ \\_| \\_/\\_| \\_/\\____/ \n";
     for (int i = 0; i < 4; i++) {
         Sleep(300);
-        system("CLS");
+        cls();
         prin(num);
         cout << endl << endl << endl;
         cout << "   _    _  _____  _   _  _   _  _____ ______ \n";
@@ -287,6 +308,7 @@ void win(vector<int> num) {
         system("CLS");
         prin(num);
     }
+    show();
 }
 
 
@@ -403,9 +425,10 @@ void win(vector<int> num) {
     }
 }
 */
+
 int generate() {
 
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
 
     default_random_engine generator(seed);
 
@@ -437,6 +460,8 @@ int generate() {
 }
 
 void rollNumbers(vector<int>& sum, int delays) {
+    hide();
+    system("cls");
     sum[0] = generate();
     sum[1] = generate();
     sum[2] = generate();
@@ -444,17 +469,11 @@ void rollNumbers(vector<int>& sum, int delays) {
     int sumold2 = sum[1];
     int sumold3 = sum[2];
 
-    if (sum[0] == sum[1]) {
+    while (sum[0] == sum[1] || sum[0] == sum[2]) {
+        sum[0] = generate();
+    }
+    while (sum[1] == sum[2] || sum[1] == sum[0]) {
         sum[1] = generate();
-    }
-    if (sum[1] == sum[2]) {
-        sum[2]== generate();
-    }
-    if (sum[0] == sum[1]) {
-        sum[1] = generate();
-    }
-    if (sum[1] == sum[2]) {
-        sum[2] == generate();
     }
 
     for (int i = 0; i < 71; i++) {
@@ -478,7 +497,7 @@ void rollNumbers(vector<int>& sum, int delays) {
             }
         }
         Sleep(delays);
-        system("CLS");
+        cls();
         prin(sum);
         if (i > 50) {
             if (i >= 60) {
@@ -516,22 +535,23 @@ void rollNumbers(vector<int>& sum, int delays) {
             }
         }
         Sleep(delays);
-        system("CLS");
+        cls();
         prin(sum);
     }
-    cout << endl;
+    show();
+    cout << endl << endl << endl;
     if (cash <= 0) return;
 
     if (sum[0] == sum[1] && sum[1] == sum[2]) return;
 
-    string temp4 = "Press enter to spin (10$ COST) || q to go to main menu\n";
-    cout << "Owned money ($): " << cash<<endl;
+    string temp4 = "  Press enter to spin (10$ COST) || q to go to main menu\n";
+    cout << "  Owned money ($): " << cash << endl<<endl;
     for (int i = 0; i < temp4.size(); i++) {
         cout << temp4[i];
-        Sleep(10/speed);
+        Sleep(10 / speed);
     }
-
-    back:
+    cout << endl << "> ";
+back:
     char input;
     cin.get(input);
     if (input == '\n' || input == '\0') {
@@ -546,7 +566,7 @@ void rollNumbers(vector<int>& sum, int delays) {
     cash -= 10;
     times++;
     sum = { 0, 0, 0 };
-    delays = 10/speed;
+    delays = 10 / speed;
     rollNumbers(sum, delays);
 }
 
@@ -554,26 +574,6 @@ void mainend() {
     system("cls");
 
     cout << "   .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n"
-        "  | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n"
-        "  | |    _______   | || |   _____      | || |     ____     | || |  _________   | || |    _______   | |\n"
-        "  | |   /  ___  |  | || |  |_   _|     | || |   .'    `.   | || | |  _   _  |  | || |   /  ___  |  | |\n"
-        "  | |  |  (__ \\_|  | || |    | |       | || |  /  .--.  \\  | || | |_/ | | \\_|  | || |  |  (__ \\_|  | |\n"
-        "  | |   '.___`-.   | || |    | |   _   | || |  | |    | |  | || |     | |      | || |   '.___`-.   | |\n"
-        "  | |  |`\\____) |  | || |   _| |__/ |  | || |  \\  `--'  /  | || |    _| |_     | || |  |`\\____) |  | |\n"
-        "  | |  |_______.'  | || |  |________|  | || |   `.____.'   | || |   |_____|    | || |  |_______.'  | |\n"
-        "  | |              | || |              | || |              | || |              | || |              | |\n"
-        "  | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n"
-        "   '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n";
-
-    if (cash <= 0) {
-        cout << "YOU LOSE";
-        lost++;
-        system("pause");
-        cout << "Resetting cash\n";
-        cash = 100;
-        Sleep(1000);
-        system("cls");
-        cout << "   .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n"
             "  | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n"
             "  | |    _______   | || |   _____      | || |     ____     | || |  _________   | || |    _______   | |\n"
             "  | |   /  ___  |  | || |  |_   _|     | || |   .'    `.   | || | |  _   _  |  | || |   /  ___  |  | |\n"
@@ -584,35 +584,54 @@ void mainend() {
             "  | |              | || |              | || |              | || |              | || |              | |\n"
             "  | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n"
             "   '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n";
+
+    if (cash <= 0) {
+        cout << "  YOU LOST YOUR LIFE SAVINGS\n";
+        lost++;
+        cout << "  Resetting cash\n";
+        cash = 100;
+        system("pause");
+        system("cls");
+        cout << "   .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n"
+                "  | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n"
+                "  | |    _______   | || |   _____      | || |     ____     | || |  _________   | || |    _______   | |\n"
+                "  | |   /  ___  |  | || |  |_   _|     | || |   .'    `.   | || | |  _   _  |  | || |   /  ___  |  | |\n"
+                "  | |  |  (__ \\_|  | || |    | |       | || |  /  .--.  \\  | || | |_/ | | \\_|  | || |  |  (__ \\_|  | |\n"
+                "  | |   '.___`-.   | || |    | |   _   | || |  | |    | |  | || |     | |      | || |   '.___`-.   | |\n"
+                "  | |  |`\\____) |  | || |   _| |__/ |  | || |  \\  `--'  /  | || |    _| |_     | || |  |`\\____) |  | |\n"
+                "  | |  |_______.'  | || |  |________|  | || |   `.____.'   | || |   |_____|    | || |  |_______.'  | |\n"
+                "  | |              | || |              | || |              | || |              | || |              | |\n"
+                "  | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n"
+                "   '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n";
     }
-    string temp1 = "Owned money ($): ";
-    string temp2 = "Times spun: ";
-    string temp3 = "Times lost: ";
+    string temp1 = "  Owned money ($): ";
+    string temp2 = "  Times spun: ";
+    string temp3 = "  Times lost: ";
 
     for (int i = 0; i < temp1.size(); i++) {
         cout << temp1[i];
-        Sleep(10/speed);
+        Sleep(10 / speed);
     }
     cout << cash << endl << endl;
     for (int i = 0; i < temp2.size(); i++) {
         cout << temp2[i];
-        Sleep(10/speed);
+        Sleep(10 / speed);
     }
     cout << times << endl << endl;
     for (int i = 0; i < temp3.size(); i++) {
         cout << temp3[i];
-        Sleep(10/speed);
+        Sleep(10 / speed);
     }
     cout << lost << endl << endl;
 
-    string temp4 = "Press enter to spin (10$ COST) || q to quit\n";
+    string temp4 = "  Press enter to spin (10$ COST) || q to quit\n";
 
     for (int i = 0; i < temp4.size(); i++) {
         cout << temp4[i];
-        Sleep(10/speed);
+        Sleep(10 / speed);
     }
-
-    back:
+    cout << endl << "> ";
+back:
     char input;
     cin.get(input);
     if (input == '\n' || input == '\0') {
@@ -626,7 +645,7 @@ void mainend() {
 
     vector<int> sum = { 0, 0, 0 };
 
-    int initialDelay = 10/speed;
+    int initialDelay = 10 / speed;
     times++;
     cash -= 10;
 
@@ -635,41 +654,41 @@ void mainend() {
     if (sum[0] == sum[1] && sum[1] == sum[2]) {
 
         win(sum);
-        cout << endl;
+        cout << endl<<endl<<endl;
         switch (sum[0]) {
 
         case 1: cash += 200;
-            cout << "Money won: " << 200;
+            cout << "  Money won: " << 200;
             Sleep(2000);
             break;
 
         case 2: cash += 400;
-            cout << "Money won: " << 400;
+            cout << "  Money won: " << 400;
             Sleep(2000);
             break;
 
         case 3: cash += 800;
-            cout << "Money won: " << 800;
+            cout << "  Money won: " << 800;
             Sleep(2000);
             break;
 
         case 4: cash += 2000;
-            cout << "Money won: " << 2000;
+            cout << "  Money won: " << 2000;
             Sleep(2000);
             break;
 
         case 5: cash += 5000;
-            cout << "Money won: " << 5000;
+            cout << "  Money won: " << 5000;
             Sleep(2000);
             break;
 
         case 6: cash += 10000;
-            cout << "Money won: " << 10000;
+            cout << "  Money won: " << 10000;
             Sleep(2000);
             break;
 
         case 7: cash += 100000;
-            cout << "Money won: " << 100000;
+            cout << "  Money won: " << 100000;
             Sleep(2000);
             break;
 
@@ -757,7 +776,7 @@ void loaddata() {
 }
 
 void load() {
-
+    hide();
     string abc = "[               ]";
 
     cout << "Loading " << abc;
@@ -770,18 +789,17 @@ void load() {
 
         abc[i] = 254;
 
-        system("cls");
+        cls();
         cout << "Tip: For your data to save you must go back to the main menu and type q to quit safely.\n";
         cout << "Loading " << abc;
 
     }
 
     cout << endl << "Complete! ";
-
+    show();
     system("pause");
 
     system("cls");
-
     string temp1 = "Calibrating";
     for (int i = 0; i < temp1.size(); i++) {
         cout << temp1[i];
@@ -793,13 +811,13 @@ void load() {
     Sleep(50);
     cout << ".";
     Sleep(200);
-    system("cls");
+    cls();
     cout << "Calibrating ERROR";
     Sleep(400);
     system("cls");
     cout << "Calibrating ";
     Sleep(100);
-    system("cls");
+    cls();
     cout << "Calibrating OK";
     Sleep(400);
 }
@@ -808,12 +826,12 @@ void load() {
 void savedata() {
 
     cout << endl;
-
+    system("cls");
     ofstream output("data.txt");
 
     if (output.is_open()) {
 
-        cout << "Saving data\n";
+        cout << "Saving data\n\n";
 
         string c = "";
         int temp;
@@ -882,11 +900,12 @@ int main() {
         cout << "  ____) || |____    | |      | |    _| |_ | |\\  || |__| | ____) |\n";
         cout << " |_____/ |______|   |_|      |_|   |_____||_| \\_| \\_____||_____/ \n\n";
 
-        string temp1 = "Define console SPEED (default: 1, max: 2, min: 1): ";
+        string temp1 = "Define console SPEED (default: 1, max: 2, min: 1) \n";
         for (int i = 0; i < temp1.size(); i++) {
             cout << temp1[i];
             Sleep(20);
         }
+        cout << endl << "> ";
         cin >> speed;
 
         if (speed > 2 || speed < 1) {
